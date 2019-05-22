@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use DB;
+use Schema;
 
 class JobList extends Command
 {
@@ -53,6 +54,7 @@ class JobList extends Command
     {
         parent::__construct();
 
+        $this->checkIfTableJobsExists();
         $this->loadJobs();
     }
 
@@ -67,6 +69,18 @@ class JobList extends Command
             $this->table($this->headers, $this->data);
         } else {
             $this->info('No jobs available to display.');
+        }
+    }
+
+    /**
+     * Check if table jobs has a schema in database.
+     *
+     * @return void
+     */
+    private function checkIfTableJobsExists()
+    {
+        if (!Schema::hasTable('jobs')) {
+            die("Table jobs does not exists.\n");
         }
     }
 
